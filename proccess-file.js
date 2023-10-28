@@ -3,11 +3,9 @@ const axios = require('axios');
 const csvtojson = require('csvtojson');
 const fs = require('fs');
 
-function processFile(batch, filename) {
+function processFile(url) {
    return new Promise(async (resolve, reject) => {
       try {
-         const url = `${process.env.FILES_API_URL}/${batch}/${filename}`;
-
          const response = await axios({
             method: 'get',
             url: url,
@@ -19,7 +17,6 @@ function processFile(batch, filename) {
             csvtojson()
                .fromString(csvString)
                .then(json => {
-                  console.log(json);
                   resolve(json);
                });
          });

@@ -25,37 +25,38 @@ const createCharge = require('./create-charge');
                 console.log('Mensagem recebida:', msg.content.toString());
 
                 const payload = JSON.parse(msg.content.toString());
-                const batch = payload.batch;
-                const filename = payload.filename;
+                const filename = payload.filename
+                const batch = payload.batch
 
-                const items = await processFile(batch, filename);
-                const charge = await createCharge(items);
+                const items = await processFile(filename);
+                const chargePdfUrl = await createCharge(items);
 
                 const result = {
-                    filename: filename,
-                    chargeId: charge.data.charge_id
+                    batch: batch,
+                    url: chargePdfUrl
                 }
 
                 const string = JSON.stringify(result);
                 pubChannel.sendToQueue(processedFilesQueue, Buffer.from(string));
 
-                subChannel.ack(msg);
                 console.log('Arquivo processado com sucesso:', result);
             } else {
                 console.log('Consumidor cancelado pelo servidor.');
             }
         } catch (error) {
-            console.log(`Erro ao processar arquivo: ${error}`);
+            console.error(`Erro ao processar arquivo: ${error}`);
+        } finally {
+            subChannel.ack(msg);
         }
     });
 
     // TODO: remove this
-    // const mock = {
-    //     batch: 1,
-    //     filename: 'b07a6cdf-7c18-4a82-b344-cbf023300d39.csv'
-    // }
+    const mock = {
+        batch: 1,
+        filename: `https://trabalhofinalpos.blob.core.windows.net/files/trabalhofinalpos/1698195940022.csv`
+    }
 
-    // const string = JSON.stringify(mock);
-    // pubChannel.sendToQueue(filesQueue, Buffer.from(string));
+    const string = JSON.stringify(mock);
+    pubChannel.sendToQueue(filesQueue, Buffer.from(string));
 })();
 
