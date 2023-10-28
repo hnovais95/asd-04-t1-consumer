@@ -51,12 +51,12 @@ const createCharge = require('./create-charge');
     });
 
     // TODO: remove this
-    const mock = {
-        batch: 1,
-        filename: `https://trabalhofinalpos.blob.core.windows.net/files/trabalhofinalpos/1698195940022.csv`
-    }
+    // const mock = {
+    //     batch: 1,
+    //     filename: `https://trabalhofinalpos.blob.core.windows.net/files/trabalhofinalpos/1698195940022.csv`
+    // }
 
-    const string = JSON.stringify(mock);
-    pubChannel.sendToQueue(filesQueue, Buffer.from(string));
+    // const string = JSON.stringify(mock);
+    // pubChannel.sendToQueue(filesQueue, Buffer.from(string));
 })();
 
