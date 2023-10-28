@@ -4,7 +4,7 @@ const amqplib = require('amqplib');
 const processFile = require('./proccess-file');
 const createCharge = require('./create-charge');
 
-(async () => {
+const listenMessages = async () => {
     const conn = await amqplib.connect(process.env.RABBITMQ_URL);
 
     const filesQueue = process.env.FILES_QUEUE;
@@ -33,7 +33,7 @@ const createCharge = require('./create-charge');
 
                 const result = {
                     batch: batch,
-                    url: chargePdfUrl
+                    ticketURL: chargePdfUrl
                 }
 
                 const string = JSON.stringify(result);
@@ -52,11 +52,13 @@ const createCharge = require('./create-charge');
 
     // TODO: remove this
     // const mock = {
-    //     batch: 1,
+    //     batch: `a7206aad-875a-42ce-aff2-9aa08282e7f7`,
     //     filename: `https://trabalhofinalpos.blob.core.windows.net/files/trabalhofinalpos/1698195940022.csv`
     // }
 
     // const string = JSON.stringify(mock);
     // pubChannel.sendToQueue(filesQueue, Buffer.from(string));
-})();
+};
 
+listenMessages();
+console.log("Servidor online...")
